@@ -1,0 +1,40 @@
+:root {
+    --bg-color: #0a0a12;
+    --card-bg: #12121e;
+    --neon-green: #00ff66;
+    --neon-red: #ff0055;
+    --neon-blue: #00ccff;
+    --text-color: #00ff66;
+    --border-color: #00ff66;
+    --font-family: 'Courier New', Courier, monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-family); }
+body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; }
+.container { width: 100%; max-width: 480px; background-color: var(--card-bg); border: 1px solid var(--border-color); box-shadow: 0 0 15px rgba(0, 255, 102, 0.2); padding: 20px; border-radius: 5px; }
+header { text-align: center; margin-bottom: 20px; }
+.glitch { font-size: 1.6rem; color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); letter-spacing: 2px; }
+.subtitle { font-size: 0.68rem; color: #888; margin-top: 5px; letter-spacing: 1px; }
+.input-group { margin-bottom: 15px; }
+label { display: block; font-size: 0.8rem; margin-bottom: 5px; }
+input { width: 100%; padding: 10px; background-color: #000; border: 1px solid #333; color: var(--neon-green); border-radius: 3px; outline: none; margin-bottom: 8px; }
+input:focus { border-color: var(--neon-green); }
+button { width: 100%; padding: 10px; background-color: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); font-weight: bold; cursor: pointer; transition: 0.3s; }
+button:hover { background-color: var(--neon-green); color: #000; }
+.sm-btn { width: auto; padding: 3px 8px; font-size: 0.7rem; border-color: var(--neon-blue); color: var(--neon-blue); }
+.sm-btn:hover { background-color: var(--neon-blue); color: #000; }
+#status-msg, #admin-msg { margin-top: 8px; text-align: center; font-size: 0.8rem; }
+.error { color: var(--neon-red); }
+.success { color: var(--neon-green); }
+.hidden { display: none; }
+
+#chat-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; padding-bottom: 10px; border-bottom: 1px solid #222; margin-bottom: 10px; }
+.box-panel { background: #000; border: 1px solid var(--neon-blue); padding: 12px; margin-bottom: 12px; border-radius: 4px; }
+.box-panel h4 { font-size: 0.75rem; color: var(--neon-blue); margin-bottom: 8px; text-align: center; }
+
+#messages-box { height: 260px; background-color: #000; border: 1px solid #222; padding: 10px; overflow-y: auto; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
+.msg { font-size: 0.85rem; word-break: break-word; }
+.msg .sender { color: var(--neon-blue); font-weight: bold; }
+.msg .time { font-size: 0.65rem; color: #555; margin-left: 5px; }
+#chat-form { display: flex; gap: 8px; }
+#chat-form input { flex: 1; margin-bottom: 0; }
+#chat-form button { width: auto; padding: 0 15px; }

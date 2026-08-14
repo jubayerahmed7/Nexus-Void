@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS-VOID NETWORK</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="glitch">NEXUS // VOID</h1>
+            <p class="subtitle">ORGANIZATION COMMUNICATION NODE</p>
+        </header>
+
+        <!-- Login Section -->
+        <main id="auth-section">
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="username">IDENTITY</label>
+                    <input type="text" id="username" placeholder="Enter Username" required autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label for="password">PASSCODE</label>
+                    <input type="password" id="password" placeholder="Enter Passcode" required>
+                </div>
+                <button type="submit" id="login-btn">ACCESS NODE</button>
+            </form>
+            <div id="status-msg"></div>
+        </main>
+
+        <!-- Main Dashboard & Chat Section -->
+        <main id="chat-section" class="hidden">
+            <div id="chat-header">
+                <span>ACTIVE NODE: <strong id="user-display"></strong></span>
+                <button id="toggle-admin-btn" class="sm-btn">+ ADD MEMBER</button>
+            </div>
+
+            <!-- Add Member Modal/Panel (Admin Only) -->
+            <div id="admin-panel" class="hidden box-panel">
+                <h4>AUTHORIZE NEW MEMBER</h4>
+                <input type="password" id="admin-pass" placeholder="Your Admin Passcode">
+                <input type="text" id="new-user" placeholder="New Username">
+                <input type="password" id="new-pass" placeholder="New Member Passcode">
+                <button id="create-user-btn">AUTHORIZE</button>
+                <div id="admin-msg"></div>
+            </div>
+
+            <div id="messages-box"></div>
+
+            <form id="chat-form">
+                <input type="text" id="msg-input" placeholder="Type encrypted message..." autocomplete="off" required>
+                <button type="submit" id="send-btn">SEND</button>
+            </form>
+        </main>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
