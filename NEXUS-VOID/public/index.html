@@ -7,7 +7,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
-            background: #020204; 
+            background: #000; /* একদম কালো ব্যাকগ্রাউন্ড */
             color: #00ff66; 
             font-family: 'Courier New', Courier, monospace; 
             min-height: 100vh;
@@ -17,210 +17,88 @@
             overflow: hidden;
         }
 
-        /* Matrix Canvas Background (Brighter Effect) */
-        #matrix { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            z-index: 1; 
-            opacity: 0.85; /* আলো বাড়ানো হয়েছে */
-        }
+        #matrix { position: fixed; top: 0; left: 0; z-index: 1; opacity: 0.15; }
 
-        /* Original Cyber Card Container */
         .card-container {
             position: relative;
             z-index: 2;
-            background: rgba(5, 12, 8, 0.92);
-            border: 1.5px solid #00ff66;
-            box-shadow: 0 0 25px rgba(0, 255, 102, 0.35);
-            border-radius: 8px;
-            padding: 30px 25px;
-            width: 90%;
-            max-width: 420px;
-            text-align: center;
-        }
-
-        .glitch-title {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #00ff66;
-            text-shadow: 0 0 10px #00ff66, 0 0 20px #00ff66;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-        }
-
-        .subtitle {
-            font-size: 0.65rem;
-            color: #00bb44;
-            letter-spacing: 1.5px;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-        }
-
-        /* Input Fields styling from original UI */
-        .input-group {
-            text-align: left;
-            margin-bottom: 18px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 0.75rem;
-            color: #00ff66;
-            margin-bottom: 6px;
-            letter-spacing: 1px;
-            font-weight: bold;
-        }
-
-        .input-group input {
-            width: 100%;
-            background: #020604;
-            border: 1px solid #005522;
-            border-radius: 4px;
-            padding: 12px;
-            color: #00ff66;
-            font-family: monospace;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .input-group input:focus {
-            border-color: #00ff66;
-            box-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
-        }
-
-        .btn-access {
-            width: 100%;
-            background: transparent;
+            background: #050505; /* কার্ডের ব্যাকগ্রাউন্ড কালো */
             border: 1px solid #00ff66;
-            color: #00ff66;
-            padding: 12px;
-            font-weight: bold;
-            font-family: monospace;
-            cursor: pointer;
             border-radius: 4px;
-            letter-spacing: 1.5px;
-            margin-top: 10px;
-            transition: 0.3s;
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
         }
 
-        .btn-access:hover {
-            background: #00ff66;
-            color: #000;
-            box-shadow: 0 0 20px #00ff66;
-        }
+        .glitch-title { font-size: 1.5rem; font-weight: bold; text-align: center; margin-bottom: 5px; text-shadow: 0 0 5px #00ff66; }
+        .subtitle { font-size: 0.6rem; text-align: center; color: #008833; margin-bottom: 20px; text-transform: uppercase; }
 
-        .hidden { display: none !important; }
-
-        /* Chat Section Inside Card */
         #chat-box {
             height: 250px;
             overflow-y: auto;
-            text-align: left;
-            border: 1px solid #005522;
+            border: 1px solid #004411;
             padding: 10px;
             margin-bottom: 15px;
-            background: #020604;
-            border-radius: 4px;
+            background: #000;
         }
 
-        .chat-msg { margin-bottom: 8px; font-size: 0.85rem; word-break: break-word; }
-        .chat-input-wrapper { display: flex; gap: 8px; }
-        .chat-input-wrapper input { flex: 1; }
-        .chat-input-wrapper button { width: auto; padding: 0 15px; }
+        .chat-input-wrapper { display: flex; gap: 5px; }
+        .chat-input-wrapper input {
+            flex: 1;
+            background: #000;
+            border: 1px solid #004411;
+            padding: 10px;
+            color: #00ff66;
+            outline: none;
+        }
+
+        .btn-send {
+            background: #00ff66;
+            color: #000;
+            border: none;
+            padding: 0 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-
     <canvas id="matrix"></canvas>
-
     <div class="card-container">
         <div class="glitch-title">NEXUS // VOID</div>
-        <div class="subtitle">ORGANIZATION COMMUNICATION NODE</div>
-
-        <!-- Login Form -->
-        <form id="login-form">
-            <div class="input-group">
-                <label>IDENTITY</label>
-                <input type="text" id="username" placeholder="Enter Username" required autocomplete="off">
-            </div>
-            <div class="input-group">
-                <label>PASSCODE</label>
-                <input type="password" id="password" placeholder="Enter Passcode" required>
-            </div>
-            <button type="submit" class="btn-access">ACCESS NODE</button>
-        </form>
-
-        <!-- Chat Console (Appears after login) -->
-        <div id="chat-section" class="hidden">
-            <div style="font-size:0.75rem; text-align:left; margin-bottom:8px; color:#00ff66;">
-                STATUS: <span style="color:#fff;">AUTHENTICATED</span>
-            </div>
-            <div id="chat-box"></div>
-            <div class="chat-input-wrapper">
-                <div class="input-group" style="margin:0; flex:1;">
-                    <input type="text" id="chatInput" placeholder="Command..." autocomplete="off">
-                </div>
-                <button onclick="sendMsg()" class="btn-access" style="margin:0;">SEND</button>
-            </div>
+        <div class="subtitle">SECURE COMMUNICATION NODE</div>
+        
+        <div id="chat-box"></div>
+        <div class="chat-input-wrapper">
+            <input type="text" id="chatInput" placeholder="Type encrypted message..">
+            <button onclick="sendMsg()" class="btn-send">SEND</button>
         </div>
     </div>
 
     <script>
-        // Matrix Background Script with High Glow & Visibility
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
         const drops = Array(Math.floor(canvas.width / 16)).fill(1);
-        function drawMatrix() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Glowing Text Effect
-            ctx.fillStyle = "#33ff77";
-            ctx.shadowBlur = 8;
-            ctx.shadowColor = "#00ff66";
-            ctx.font = "bold 15px monospace";
-
+            ctx.fillStyle = "#00ff66";
             drops.forEach((d, i) => {
-                const text = Math.random() > 0.5 ? "1" : "0";
-                ctx.fillText(text, i * 16, d * 16);
-                if (d * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                ctx.fillText(Math.random() > 0.5 ? "1" : "0", i * 16, d * 16);
+                if (d * 16 > canvas.height && Math.random() > 0.97) drops[i] = 0;
                 drops[i]++;
             });
         }
-        setInterval(drawMatrix, 35);
-
-        // Chat Persistence Logic
-        const chatBox = document.getElementById('chat-box');
-
-        function loadChats() {
-            const saved = JSON.parse(localStorage.getItem('nexus_chats')) || [];
-            chatBox.innerHTML = '';
-            saved.forEach(m => {
-                chatBox.innerHTML += `<div class="chat-msg">> ${m}</div>`;
-            });
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+        setInterval(draw, 50);
 
         function sendMsg() {
             const input = document.getElementById('chatInput');
             if (!input.value.trim()) return;
-            const saved = JSON.parse(localStorage.getItem('nexus_chats')) || [];
-            saved.push(input.value.trim());
-            localStorage.setItem('nexus_chats', JSON.stringify(saved));
+            document.getElementById('chat-box').innerHTML += `<div>> ${input.value}</div>`;
             input.value = '';
-            loadChats();
         }
-
-        document.getElementById('login-form').onsubmit = (e) => {
-            e.preventDefault();
-            document.getElementById('login-form').classList.add('hidden');
-            document.getElementById('chat-section').classList.remove('hidden');
-            loadChats();
-        };
     </script>
 </body>
 </html>
