@@ -6,94 +6,218 @@
     <title>NEXUS-VOID NETWORK</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000; color: #0f0; font-family: monospace; overflow: hidden; }
-        
-        /* Matrix Background */
-        #matrix { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.3; }
-        
-        .container { position: relative; z-index: 1; text-align: center; margin-top: 50px; }
-        .hidden { display: none; }
-        
-        /* Your Existing Styles */
-        h1.glitch { font-size: 3rem; text-shadow: 0 0 10px #0f0; }
-        .input-group { margin: 10px; }
-        input { background: #000; border: 1px solid #0f0; color: #0f0; padding: 5px; }
-        #chat-section { max-width: 600px; margin: 0 auto; border: 1px solid #0f0; padding: 10px; height: 300px; overflow-y: auto; text-align: left; }
+        body { 
+            background: #020204; 
+            color: #00ff66; 
+            font-family: 'Courier New', Courier, monospace; 
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Matrix Canvas Background (Brighter Effect) */
+        #matrix { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            z-index: 1; 
+            opacity: 0.85; /* আলো বাড়ানো হয়েছে */
+        }
+
+        /* Original Cyber Card Container */
+        .card-container {
+            position: relative;
+            z-index: 2;
+            background: rgba(5, 12, 8, 0.92);
+            border: 1.5px solid #00ff66;
+            box-shadow: 0 0 25px rgba(0, 255, 102, 0.35);
+            border-radius: 8px;
+            padding: 30px 25px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        .glitch-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #00ff66;
+            text-shadow: 0 0 10px #00ff66, 0 0 20px #00ff66;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 0.65rem;
+            color: #00bb44;
+            letter-spacing: 1.5px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        /* Input Fields styling from original UI */
+        .input-group {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: #00ff66;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: #020604;
+            border: 1px solid #005522;
+            border-radius: 4px;
+            padding: 12px;
+            color: #00ff66;
+            font-family: monospace;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #00ff66;
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+        }
+
+        .btn-access {
+            width: 100%;
+            background: transparent;
+            border: 1px solid #00ff66;
+            color: #00ff66;
+            padding: 12px;
+            font-weight: bold;
+            font-family: monospace;
+            cursor: pointer;
+            border-radius: 4px;
+            letter-spacing: 1.5px;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-access:hover {
+            background: #00ff66;
+            color: #000;
+            box-shadow: 0 0 20px #00ff66;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Chat Section Inside Card */
+        #chat-box {
+            height: 250px;
+            overflow-y: auto;
+            text-align: left;
+            border: 1px solid #005522;
+            padding: 10px;
+            margin-bottom: 15px;
+            background: #020604;
+            border-radius: 4px;
+        }
+
+        .chat-msg { margin-bottom: 8px; font-size: 0.85rem; word-break: break-word; }
+        .chat-input-wrapper { display: flex; gap: 8px; }
+        .chat-input-wrapper input { flex: 1; }
+        .chat-input-wrapper button { width: auto; padding: 0 15px; }
     </style>
 </head>
 <body>
 
     <canvas id="matrix"></canvas>
 
-    <div class="container">
-        <header>
-            <h1 class="glitch">NEXUS // VOID</h1>
-            <p class="subtitle">ORGANIZATION COMMUNICATION NODE</p>
-        </header>
+    <div class="card-container">
+        <div class="glitch-title">NEXUS // VOID</div>
+        <div class="subtitle">ORGANIZATION COMMUNICATION NODE</div>
 
-        <!-- Login Section -->
-        <main id="auth-section">
-            <form id="login-form">
-                <div class="input-group">
-                    <label>ID:</label>
-                    <input type="text" id="username" required>
-                </div>
-                <div class="input-group">
-                    <label>PASS:</label>
-                    <input type="password" id="password" required>
-                </div>
-                <button type="submit">ACCESS NODE</button>
-            </form>
-            <div id="status-msg"></div>
-        </main>
+        <!-- Login Form -->
+        <form id="login-form">
+            <div class="input-group">
+                <label>IDENTITY</label>
+                <input type="text" id="username" placeholder="Enter Username" required autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>PASSCODE</label>
+                <input type="password" id="password" placeholder="Enter Passcode" required>
+            </div>
+            <button type="submit" class="btn-access">ACCESS NODE</button>
+        </form>
 
-        <!-- Chat Section -->
-        <main id="chat-section" class="hidden">
-            <div id="chat-header">ACTIVE NODE: <strong>ONLINE</strong></div>
-            <div id="messages"></div>
-            <input type="text" id="chatInput" placeholder="Command...">
-            <button onclick="sendMsg()">EXECUTE</button>
-        </main>
+        <!-- Chat Console (Appears after login) -->
+        <div id="chat-section" class="hidden">
+            <div style="font-size:0.75rem; text-align:left; margin-bottom:8px; color:#00ff66;">
+                STATUS: <span style="color:#fff;">AUTHENTICATED</span>
+            </div>
+            <div id="chat-box"></div>
+            <div class="chat-input-wrapper">
+                <div class="input-group" style="margin:0; flex:1;">
+                    <input type="text" id="chatInput" placeholder="Command..." autocomplete="off">
+                </div>
+                <button onclick="sendMsg()" class="btn-access" style="margin:0;">SEND</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // 1. Matrix Background
+        // Matrix Background Script with High Glow & Visibility
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const drops = Array(Math.floor(canvas.width/14)).fill(1);
-        function draw() {
-            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0, canvas.width, canvas.height);
-            ctx.fillStyle = "#0f0";
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const drops = Array(Math.floor(canvas.width / 16)).fill(1);
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Glowing Text Effect
+            ctx.fillStyle = "#33ff77";
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = "#00ff66";
+            ctx.font = "bold 15px monospace";
+
             drops.forEach((d, i) => {
-                ctx.fillText("01", i*14, d*14);
-                if(d*14 > canvas.height) drops[i] = 0;
+                const text = Math.random() > 0.5 ? "1" : "0";
+                ctx.fillText(text, i * 16, d * 16);
+                if (d * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             });
         }
-        setInterval(draw, 50);
+        setInterval(drawMatrix, 35);
 
-        // 2. Chat Persistence
-        const msgDiv = document.getElementById('messages');
-        const loadChats = () => {
-            const saved = JSON.parse(localStorage.getItem('chats')) || [];
-            saved.forEach(m => msgDiv.innerHTML += `<div>${m}</div>`);
-        };
-        
-        function sendMsg() {
-            const val = document.getElementById('chatInput').value;
-            if(!val) return;
-            msgDiv.innerHTML += `<div>> ${val}</div>`;
-            const saved = JSON.parse(localStorage.getItem('chats')) || [];
-            saved.push(`> ${val}`);
-            localStorage.setItem('chats', JSON.stringify(saved));
-            document.getElementById('chatInput').value = '';
+        // Chat Persistence Logic
+        const chatBox = document.getElementById('chat-box');
+
+        function loadChats() {
+            const saved = JSON.parse(localStorage.getItem('nexus_chats')) || [];
+            chatBox.innerHTML = '';
+            saved.forEach(m => {
+                chatBox.innerHTML += `<div class="chat-msg">> ${m}</div>`;
+            });
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        // Show Chat after Login (Demo)
+        function sendMsg() {
+            const input = document.getElementById('chatInput');
+            if (!input.value.trim()) return;
+            const saved = JSON.parse(localStorage.getItem('nexus_chats')) || [];
+            saved.push(input.value.trim());
+            localStorage.setItem('nexus_chats', JSON.stringify(saved));
+            input.value = '';
+            loadChats();
+        }
+
         document.getElementById('login-form').onsubmit = (e) => {
             e.preventDefault();
-            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('login-form').classList.add('hidden');
             document.getElementById('chat-section').classList.remove('hidden');
             loadChats();
         };
