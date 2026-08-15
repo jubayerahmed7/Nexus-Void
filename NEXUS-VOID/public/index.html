@@ -4,9 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEXUS-VOID NETWORK</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; color: #0f0; font-family: monospace; overflow: hidden; }
+        
+        /* Matrix Background */
+        #matrix { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.3; }
+        
+        .container { position: relative; z-index: 1; text-align: center; margin-top: 50px; }
+        .hidden { display: none; }
+        
+        /* Your Existing Styles */
+        h1.glitch { font-size: 3rem; text-shadow: 0 0 10px #0f0; }
+        .input-group { margin: 10px; }
+        input { background: #000; border: 1px solid #0f0; color: #0f0; padding: 5px; }
+        #chat-section { max-width: 600px; margin: 0 auto; border: 1px solid #0f0; padding: 10px; height: 300px; overflow-y: auto; text-align: left; }
+    </style>
 </head>
 <body>
+
+    <canvas id="matrix"></canvas>
+
     <div class="container">
         <header>
             <h1 class="glitch">NEXUS // VOID</h1>
@@ -17,45 +35,69 @@
         <main id="auth-section">
             <form id="login-form">
                 <div class="input-group">
-                    <label for="username">IDENTITY</label>
-                    <input type="text" id="username" placeholder="Enter Username" required autocomplete="off">
+                    <label>ID:</label>
+                    <input type="text" id="username" required>
                 </div>
                 <div class="input-group">
-                    <label for="password">PASSCODE</label>
-                    <input type="password" id="password" placeholder="Enter Passcode" required>
+                    <label>PASS:</label>
+                    <input type="password" id="password" required>
                 </div>
-                <button type="submit" id="login-btn">ACCESS NODE</button>
+                <button type="submit">ACCESS NODE</button>
             </form>
             <div id="status-msg"></div>
         </main>
 
-        <!-- Main Dashboard & Chat Section -->
+        <!-- Chat Section -->
         <main id="chat-section" class="hidden">
-            <div id="chat-header">
-                <span>ACTIVE NODE: <strong id="user-display"></strong></span>
-                <button id="toggle-admin-btn" class="sm-btn">+ ADD MEMBER</button>
-            </div>
-
-            <!-- Add Member Modal/Panel (Admin Only) -->
-            <div id="admin-panel" class="hidden box-panel">
-                <h4>AUTHORIZE NEW MEMBER</h4>
-                <input type="password" id="admin-pass" placeholder="Your Admin Passcode">
-                <input type="text" id="new-user" placeholder="New Username">
-                <input type="password" id="new-pass" placeholder="New Member Passcode">
-                <button id="create-user-btn">AUTHORIZE</button>
-                <div id="admin-msg"></div>
-            </div>
-
-            <div id="messages-box"></div>
-
-            <form id="chat-form">
-                <input type="text" id="msg-input" placeholder="Type encrypted message..." autocomplete="off" required>
-                <button type="submit" id="send-btn">SEND</button>
-            </form>
+            <div id="chat-header">ACTIVE NODE: <strong>ONLINE</strong></div>
+            <div id="messages"></div>
+            <input type="text" id="chatInput" placeholder="Command...">
+            <button onclick="sendMsg()">EXECUTE</button>
         </main>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="app.js"></script>
+    <script>
+        // 1. Matrix Background
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const drops = Array(Math.floor(canvas.width/14)).fill(1);
+        function draw() {
+            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0, canvas.width, canvas.height);
+            ctx.fillStyle = "#0f0";
+            drops.forEach((d, i) => {
+                ctx.fillText("01", i*14, d*14);
+                if(d*14 > canvas.height) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+        setInterval(draw, 50);
+
+        // 2. Chat Persistence
+        const msgDiv = document.getElementById('messages');
+        const loadChats = () => {
+            const saved = JSON.parse(localStorage.getItem('chats')) || [];
+            saved.forEach(m => msgDiv.innerHTML += `<div>${m}</div>`);
+        };
+        
+        function sendMsg() {
+            const val = document.getElementById('chatInput').value;
+            if(!val) return;
+            msgDiv.innerHTML += `<div>> ${val}</div>`;
+            const saved = JSON.parse(localStorage.getItem('chats')) || [];
+            saved.push(`> ${val}`);
+            localStorage.setItem('chats', JSON.stringify(saved));
+            document.getElementById('chatInput').value = '';
+        }
+
+        // Show Chat after Login (Demo)
+        document.getElementById('login-form').onsubmit = (e) => {
+            e.preventDefault();
+            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('chat-section').classList.remove('hidden');
+            loadChats();
+        };
+    </script>
 </body>
 </html>
+
