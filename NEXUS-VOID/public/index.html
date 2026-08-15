@@ -3,102 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS-VOID NETWORK</title>
+    <title>NEXUS-VOID</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            background: #000; /* একদম কালো ব্যাকগ্রাউন্ড */
-            color: #00ff66; 
-            font-family: 'Courier New', Courier, monospace; 
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        #matrix { position: fixed; top: 0; left: 0; z-index: 1; opacity: 0.15; }
-
-        .card-container {
-            position: relative;
-            z-index: 2;
-            background: #050505; /* কার্ডের ব্যাকগ্রাউন্ড কালো */
-            border: 1px solid #00ff66;
-            border-radius: 4px;
-            padding: 25px;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .glitch-title { font-size: 1.5rem; font-weight: bold; text-align: center; margin-bottom: 5px; text-shadow: 0 0 5px #00ff66; }
-        .subtitle { font-size: 0.6rem; text-align: center; color: #008833; margin-bottom: 20px; text-transform: uppercase; }
-
-        #chat-box {
-            height: 250px;
-            overflow-y: auto;
-            border: 1px solid #004411;
-            padding: 10px;
-            margin-bottom: 15px;
-            background: #000;
-        }
-
-        .chat-input-wrapper { display: flex; gap: 5px; }
-        .chat-input-wrapper input {
-            flex: 1;
-            background: #000;
-            border: 1px solid #004411;
-            padding: 10px;
-            color: #00ff66;
-            outline: none;
-        }
-
-        .btn-send {
-            background: #00ff66;
-            color: #000;
-            border: none;
-            padding: 0 15px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        body { background: #000; color: #0f0; font-family: monospace; overflow: hidden; }
+        
+        /* Matrix Canvas Background */
+        canvas { position: fixed; top: 0; left: 0; z-index: 1; opacity: 0.35; }
+        
+        /* App Container */
+        .app-container { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100vh; max-width: 800px; margin: 0 auto; border: 1px solid #0f0; background: rgba(0, 0, 0, 0.88); }
+        .header { padding: 15px; border-bottom: 1px solid #0f0; text-align: center; font-weight: bold; font-size: 1.2rem; text-shadow: 0 0 5px #0f0; }
+        
+        /* Chat Box */
+        .chat-box { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 8px 12px; border-radius: 4px; max-width: 80%; word-break: break-word; }
+        .user-msg { background: rgba(0, 255, 0, 0.15); border: 1px solid #0f0; align-self: flex-end; color: #fff; }
+        .bot-msg { background: rgba(0, 50, 0, 0.4); border: 1px solid #005500; align-self: flex-start; color: #0f0; }
+        
+        /* Input Area */
+        .input-area { display: flex; border-top: 1px solid #0f0; padding: 10px; background: #000; }
+        input { flex: 1; background: #050505; border: 1px solid #0f0; padding: 10px; color: #0f0; outline: none; font-family: monospace; }
+        button { background: #0f0; color: #000; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; font-family: monospace; }
+        button:hover { background: #00cc00; }
     </style>
 </head>
 <body>
+
     <canvas id="matrix"></canvas>
-    <div class="card-container">
-        <div class="glitch-title">NEXUS // VOID</div>
-        <div class="subtitle">SECURE COMMUNICATION NODE</div>
-        
-        <div id="chat-box"></div>
-        <div class="chat-input-wrapper">
-            <input type="text" id="chatInput" placeholder="Type encrypted message..">
-            <button onclick="sendMsg()" class="btn-send">SEND</button>
+
+    <div class="app-container">
+        <div class="header">[+] NEXUS-VOID SECURE TERMINAL v2.0</div>
+        <div class="chat-box" id="chatBox"></div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Enter command or message..." autocomplete="off">
+            <button onclick="sendMessage()">SEND</button>
         </div>
     </div>
 
     <script>
+        // Matrix Effect
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        const drops = Array(Math.floor(canvas.width / 16)).fill(1);
-        function draw() {
+
+        const binary = "01";
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
             ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#00ff66";
-            drops.forEach((d, i) => {
-                ctx.fillText(Math.random() > 0.5 ? "1" : "0", i * 16, d * 16);
-                if (d * 16 > canvas.height && Math.random() > 0.97) drops[i] = 0;
-                drops[i]++;
-            });
-        }
-        setInterval(draw, 50);
+            ctx.fillStyle = "#0f0";
+            ctx.font = fontSize + "px monospace";
 
-        function sendMsg() {
-            const input = document.getElementById('chatInput');
-            if (!input.value.trim()) return;
-            document.getElementById('chat-box').innerHTML += `<div>> ${input.value}</div>`;
-            input.value = '';
+            for (let i = 0; i < drops.length; i++) {
+                const text = binary.charAt(Math.floor(Math.random() * binary.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
         }
+        setInterval(drawMatrix, 40);
+
+        // Chat Memory (LocalStorage)
+        const chatBox = document.getElementById('chatBox');
+        
+        window.onload = function() {
+            const savedChats = JSON.parse(localStorage.getItem('nexus_chats')) || [];
+            savedChats.forEach(chat => renderMessage(chat.text, chat.sender));
+        };
+
+        function renderMessage(text, sender) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('msg', sender === 'user' ? 'user-msg' : 'bot-msg');
+            msgDiv.innerText = (sender === 'user' ? '> ' : '[VOID]: ') + text;
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function saveChatToStorage(text, sender) {
+            const savedChats = JSON.parse(localStorage.getItem('nexus_chats')) || [];
+            savedChats.push({ text, sender });
+            localStorage.setItem('nexus_chats', JSON.stringify(savedChats));
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            renderMessage(text, 'user');
+            saveChatToStorage(text, 'user');
+            input.value = '';
+
+            setTimeout(() => {
+                const responseText = "Acknowledged: System processing command '" + text + "'";
+                renderMessage(responseText, 'bot');
+                saveChatToStorage(responseText, 'bot');
+            }, 600);
+        }
+
+        document.getElementById('userInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') sendMessage();
+        });
     </script>
 </body>
 </html>
